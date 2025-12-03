@@ -33,8 +33,7 @@
 
 - **프론트엔드**: [https://mediflow-emr.cloud](https://mediflow-emr.cloud)
 - **백엔드 API**: [https://api.mediflow-emr.cloud](https://api.mediflow-emr.cloud)
-- **API 문서**: [Swagger Editor에서 확인](https://editor.swagger.io) 
-- [swagger.yaml](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/swagger.yaml)
+- **API 문서**: [API 문서](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/6.API_DOCUMENTATION.md)
 
 ---
 ## 기능 명세

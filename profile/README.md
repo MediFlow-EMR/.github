@@ -104,6 +104,7 @@
 
 ## 기술 스택
 
+### Frontend
 | 기술 (Technology) | 용도 (Usage) |
 | :--- | :--- |
 | ![React](https://img.shields.io/badge/React-19.1.1-61DAFB?logo=react&logoColor=black) | UI 컴포넌트 라이브러리 |

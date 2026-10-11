@@ -1,10 +1,6 @@
-# MediFlow — 병동 간호·인수인계 EMR 연계 모듈
+# MediFlow EMR
 
-> 간호사의 실무 경험에서 출발해 환자 상태 확인, 간호 수행 기록, 근무조 인수인계를 연결한 포트폴리오용 PoC
-
-[서비스 체험](https://www.mediflow-emr.cloud) · [개발 저장소](https://github.com/MediFlow-EMR/mediflow-dev) · [기능 명세](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/3.FEATURES.md) · [OpenAPI 1.3.2](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/swagger.yaml)
-
-모든 환자 데이터는 가상입니다. 실제 EMR/OCS 연계, 전자서명·의료기관 인증은 구현 범위 밖이며, 전자의무기록시스템 인증을 취득한 제품이 아닙니다. 임상 효과나 시간 절감률을 실제 의료기관에서 검증하지 않았습니다.
+> 간호사의 실무 경험으로 설계한 AI 기반 인수인계 EMR 연계 모듈
 
 ## 현재 구현 상태 (2026-10-11)
 
@@ -16,66 +12,218 @@
 - 운영은 Flyway → Hibernate validate → 헬스 체크 순서입니다. 기존 DB의 최초 기준선·백업·실패 대응은 [DB 전환 안내](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/deploy/database/README.md)를 따릅니다. 로컬 MariaDB 보존은 `local` 프로필, 격리된 자동 테스트는 H2입니다.
 - 최신 API는 [swagger.yaml](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/swagger.yaml) 1.3.2, DB는 18개 JPA 엔티티입니다. 소개 GIF는 2026.10.11 운영 화면 기준입니다.
 
-## 저장소 안내
+모든 환자 데이터는 가상인 포트폴리오 PoC입니다. 실제 병원 EMR/OCS 연계·전자서명·의료기관 인증은 향후 검증 범위이며, 임상 효과나 시간 절감률을 실제 의료기관에서 측정하지 않았습니다.
 
-| 저장소 | 역할 |
-|---|---|
-| [mediflow-dev](https://github.com/MediFlow-EMR/mediflow-dev) | 실행 코드, 배포 스크립트, Swagger 원본, UI 시연 원본 |
-| [MediFlow-docs](https://github.com/MediFlow-EMR/MediFlow-docs) | 기능·설계·검증·한계와 개발 저장소 `portfolio-docs/`의 동기화본 |
-| [.github](https://github.com/MediFlow-EMR/.github/blob/main/profile/README.md) | 조직 소개와 동일한 최신 시연 GIF |
+![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI_Model-8E75B2?logo=google&logoColor=white)
+[![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.6-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![MariaDB](https://img.shields.io/badge/MariaDB-10.11-003545?logo=mariadb&logoColor=white)](https://mariadb.org)
 
-## 현재 UI 시연
 
-2026.10.11 배포된 사이트의 가상 계정으로 캡처한 5개 GIF입니다. 각 영상은 아래에 적힌 동작을 보여줍니다. AI 영상은 해당 근무조의 기록 없음 초안 편집과 기존 승인 기록의 이력 조회를 포함하며, 실제 Gemini 응답이나 모든 저장 단계를 연속 녹화한 영상은 아닙니다. 수기 초안 저장·재조회·승인·승인 후 수정의 검증 결과는 [품질 검증 기록](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/10.QUALITY_AND_VALIDATION.md)에 따로 정리했습니다.
+---
 
-### 1. 이메일 로그인과 데모 체험
+## 프로젝트 소개
 
-![이메일 로그인과 데모 체험](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/2100440a7ba08300c63abed8d32da4f4a8c5a939/frontend/public/assets/login.gif)
+**MediFlow EMR**은 간호사의 실무 경험을 바탕으로 설계된 전자의무기록 시스템입니다.
 
-### 2. 담당·부서 환자와 날짜·근무조 전환
+### 핵심 가치
 
-![담당·부서 환자와 날짜·근무조 전환](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/2100440a7ba08300c63abed8d32da4f4a8c5a939/frontend/public/assets/patientdashboard.gif)
+- **One-View Dashboard**: 환자 정보를 한 화면에서 통합 조회
+- **AI 인수인계**: Google Gemini 기반 자동 요약으로 인수인계 시간 단축
+- **실무 중심 설계**: 간호사가 직접 겪은 불편함을 기술로 해결
 
-### 3. 간호기록 다중 카테고리 필터
+### 주요 지표
 
-![간호기록 다중 카테고리 필터](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/2100440a7ba08300c63abed8d32da4f4a8c5a939/frontend/public/assets/nursingrecord.gif)
+- **초기 개발 기록**: 7일 (기획 1일 + 개발 4일 + 배포 2일). 이후 기능·안정성 개선은 2026.10.11까지 반영했습니다.
+- **배포**: S3/CloudFront 프론트엔드, EC2/Nginx 백엔드, RDS MariaDB
+- **목표**: 인수인계 준비 과정의 시간·누락 감소. 초기 목표 수치(30–60분 → 5–10분)는 실제 성과 측정값이 아닙니다.
 
-### 4. 오더 날짜 정렬과 약품 정보 조회
+---
 
-![오더 날짜 정렬과 약품 정보 조회](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/2100440a7ba08300c63abed8d32da4f4a8c5a939/frontend/public/assets/ordertab.gif)
+## 배포 URL
 
-### 5. AI 초안 편집·미저장 보호·승인 기록 이력
+- **프론트엔드**: [https://www.mediflow-emr.cloud](https://www.mediflow-emr.cloud)
+- **백엔드 API**: [https://api.mediflow-emr.cloud](https://api.mediflow-emr.cloud)
+- **API 문서**: [API 문서](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/6.API_DOCUMENTATION.md)
 
-![AI 초안 편집·미저장 보호·승인 기록 이력](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/2100440a7ba08300c63abed8d32da4f4a8c5a939/frontend/public/assets/aihandover.gif)
+---
+## 기능 명세
 
-[캡처 정보·프레임 수·SHA-256 검증값](../assets/demos/manifest.json)
+- [기능 명세서](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/3.FEATURES.md)
 
-## 기술과 배포
+## 기능 시연
 
-| 영역 | 현재 코드·배포 구성 |
-|---|---|
-| Frontend | React 19.2.3 · Vite 7.3.7 · React Router 7.18.4 · Zustand 5.0.8 · Axios 1.20.0 · Recharts 3.5.0 |
-| Backend | Java 21 · Spring Boot 3.5.6 · Spring Security · JPA/QueryDSL · JWT · Spring Mail |
-| Database | MariaDB · Flyway, 격리된 자동 테스트용 H2 |
-| 외부 연동 | Google Gemini 인수인계 초안 · 식약처 약품 정보 · Google/Kakao OAuth2 구현 |
-| Frontend 배포 | GitHub Actions → 비공개 S3 → CloudFront |
-| Backend 배포 | GitHub Actions OIDC → S3 JAR → SSM → EC2/systemd, Nginx → Spring Boot(9005) → RDS MariaDB |
-| 선택 확장 | Lambda → S3 약품 캐시, 캐시가 없으면 식약처 API 조회 |
+2026.10.11 배포 사이트의 가상 계정으로 촬영한 최신 PC 화면입니다. GIF별 동작 범위와 파일 검증값은 [캡처 정보](../assets/demos/manifest.json), 저장·권한·동시 수정 검증 결과는 [품질 검증 기록](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/10.QUALITY_AND_VALIDATION.md)에 정리했습니다.
 
-프론트엔드 버전은 `package-lock.json` 설치 버전 기준입니다. 현재 배포 스크립트는 SSH 배포를 사용하지 않습니다. 세부 구성과 운영 절차는 [아키텍처](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/4.ARCHITECTURE.md)와 [AWS 배포 가이드](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/deploy/aws/README.md)를 참고하세요.
+### 1. 로그인
 
-## 저장과 인증의 경계
+- **이메일 로그인**
 
-- 부서·작성자 접근 제어와 version 기반 낙관적 잠금을 적용하며 오래된 수정 요청은 409로 거절합니다.
-- 이메일 중복 확인과 SMTP 발송은 분리되어 있습니다. 4자리 코드의 유효기간은 5분, 재발송 간격은 60초, 오입력 제한은 5회입니다.
-- 인증은 HttpOnly 쿠키와 JWT/OAuth2를 사용합니다. 쿠키 설정만으로 모든 XSS·CSRF 위험이 제거되는 것은 아닙니다.
-- AI는 선택한 근무조 기록을 초안으로 정리하며 간호사가 검토합니다. 요청의 이름·차트번호는 가명으로 바꾸지만 자유 입력 내용의 개인정보까지 자동 제거하지 않습니다.
-- 임상 기록 전체의 정정 이력·전자서명은 구현되지 않았습니다. 현재 버전별 스냅샷은 인수인계에 적용됩니다.
+![이메일 로그인과 데모 체험](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/644421f36b15e6dc6bb47614c52f20612ee7e661/frontend/public/assets/login.gif)
+
+- **Google, Kakao 소셜 로그인**
+
+Google/Kakao OAuth2 구현을 유지합니다. 이번 최신 GIF는 이메일 데모 계정으로 촬영했으며 소셜 로그인 성공을 새로 촬영한 영상은 포함하지 않습니다.
+
+---
+
+### 2. 환자 정보 관리
+
+- **대시보드 - 내 담당 환자 조회**
+- **상단 날짜·근무조로 과거 담당 환자 전환, 병실 등 다중 필터**
+- **바이탈 사인 등록 및 차트**
+- **섭취배설량(I/O) 기록**
+
+![PC 가로형 대시보드·날짜·근무조·병실 다중 필터](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/644421f36b15e6dc6bb47614c52f20612ee7e661/frontend/public/assets/patientdashboard.gif)
+
+---
+
+### 3. 간호 기록
+
+- **간호기록 작성(리치 텍스트 에디터 - 형광펜/글자색)**
+- **간호기록 조회 및 수정**
+- **기간·카테고리·작성자 다중 필터 및 날짜 정렬**
+
+![간호기록 카테고리·작성자 다중 필터와 기간 달력](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/644421f36b15e6dc6bb47614c52f20612ee7e661/frontend/public/assets/nursingrecord.gif)
+
+---
+
+### 4. 투약 관리
+
+- **의료 오더 조회**
+- **약품 검색 (식약처 API)**
+- **투약 기록 등록 및 조회**
+- **오더·투약 날짜 정렬 및 약품 상세 조회**
+
+![오더 날짜 정렬과 약품 정보 조회](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/644421f36b15e6dc6bb47614c52f20612ee7e661/frontend/public/assets/ordertab.gif)
+
+---
+
+### 5. AI 인수인계
+
+최신 PC 영상은 수기 초안 임시저장·재조회·승인·작성자 수정·버전 이력과 실제 Gemini 초안 생성·편집·원본 비교·임시저장을 보여줍니다.
+
+- **AI 인수인계 요약 생성**
+- **인수인계 검토 및 저장**
+- **수기·AI 초안 임시저장·재조회·승인, 승인 후 작성자 수정 및 버전 이력**
+- **근무조·작성 방식·상태 다중 필터와 최신순/오래된순 정렬**
+
+![수기 초안 저장·승인·수정 이력과 실제 AI 초안 편집](https://raw.githubusercontent.com/MediFlow-EMR/mediflow-dev/644421f36b15e6dc6bb47614c52f20612ee7e661/frontend/public/assets/aihandover.gif)
+---
+
+## 핵심 기능
+
+| 기능 | 기술 구현 | 효과 |
+|-----|----------|------|
+| **One-View Dashboard** | React 컴포넌트 모듈화 + 데이터 aggregation | 5+ 페이지 → 1개 화면 통합 |
+| **AI 인수인계** | Gemini API 기반 의료 기록 요약 | 초안 생성·검토 지원 (시간 절감률 미측정) |
+| **리치 텍스트 에디터** | HTML 저장 + Plain Text AI 처리 | 직관적 간호기록 작성 |
+| **식약처 API 연동** | 실시간 약품 정보 조회 | 투약 안전성 향상 |
+
+---
+
+## 기술 스택
+
+### Frontend
+| 기술 (Technology) | 용도 (Usage) |
+| :--- | :--- |
+| ![React](https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=black) | UI 컴포넌트 라이브러리 |
+| ![Vite](https://img.shields.io/badge/Vite-7.3.7-646CFF?logo=vite&logoColor=white) | 빌드 도구 및 개발 서버 (HMR 지원) |
+| ![React Router](https://img.shields.io/badge/React_Router-7.18.4-CA4245?logo=reactrouter&logoColor=white) | 클라이언트 사이드 라우팅 |
+| ![Zustand](https://img.shields.io/badge/Zustand-5.0.8-443E38?logo=react&logoColor=white) | 경량 상태 관리 |
+| ![Axios](https://img.shields.io/badge/Axios-1.20.0-5A29E4?logo=axios&logoColor=white) | HTTP 클라이언트 (API 통신) |
+| ![Recharts](https://img.shields.io/badge/Recharts-3.5.0-22B5BF?style=flat) | 바이탈 사인 시계열 차트 |
+
+
+### Backend
+
+| 기술 (Technology) | 용도 (Usage) |
+| :--- | :--- |
+| ![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white) | 프로그래밍 언어 |
+| ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.6-6DB33F?logo=springboot&logoColor=white) | 백엔드 프레임워크 |
+| ![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?logo=springsecurity&logoColor=white) | 인증/인가 (JWT + OAuth2) |
+| ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-ORM-6DB33F?logo=spring&logoColor=white) | ORM (객체-관계 매핑) |
+| ![QueryDSL](https://img.shields.io/badge/QueryDSL-5.0.0-0078D4) | 타입 안전 동적 쿼리 |
+| ![JWT](https://img.shields.io/badge/JWT-0.12.3-000000?logo=jsonwebtokens&logoColor=white) | 토큰 기반 인증 |
+| ![Spring Mail](https://img.shields.io/badge/Spring_Mail-SMTP-6DB33F?logo=gmail&logoColor=white) | 이메일 인증 발송 |
+| ![Lombok](https://img.shields.io/badge/Lombok-Boilerplate-BC4521?logo=lombok&logoColor=white) | 보일러플레이트 코드 자동 생성 |
+
+### Database
+
+| 기술 (Technology) | 용도 (Usage) |
+| :--- | :--- |
+| ![MariaDB](https://img.shields.io/badge/MariaDB-Production-003545?logo=mariadb&logoColor=white) | 운영 데이터베이스 |
+| ![H2 Database](https://img.shields.io/badge/H2_Database-In_Memory-003545?logo=h2&logoColor=white) | 격리된 자동 테스트용 인메모리 DB (로컬은 MariaDB) |
+
+### External APIs
+
+| 기술 (Technology) | 용도 (Usage) |
+| :--- | :--- |
+| ![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI_Model-8E75B2?logo=google&logoColor=white) | AI 인수인계 요약 생성 |
+| ![KFDA API](https://img.shields.io/badge/공공데이터포털-식약처_API-113366?logo=data) | 약품 정보 실시간 검색 |
+| ![Google OAuth2](https://img.shields.io/badge/Google_OAuth2-Login-4285F4?logo=google&logoColor=white) | 소셜 로그인 (구글) |
+| ![Kakao OAuth2](https://img.shields.io/badge/Kakao_OAuth2-Login-FFCD00?logo=kakao&logoColor=black) | 소셜 로그인 (카카오) |
+
+### Infrastructure
+
+| 기술 (Technology) | 용도 (Usage) |
+| :--- | :--- |
+| ![AWS EC2](https://img.shields.io/badge/AWS_EC2-Backend-FF9900?logo=amazonec2&logoColor=white) | 백엔드 서버 호스팅 |
+| ![AWS RDS](https://img.shields.io/badge/AWS_RDS-MariaDB-527FFF?logo=amazonrds&logoColor=white) | MariaDB 관리형 데이터베이스 |
+| ![AWS S3](https://img.shields.io/badge/AWS_S3-Storage-569A31?logo=amazons3&logoColor=white) | 프론트엔드 정적 파일·비공개 배포 아티팩트·약품 캐시 저장 |
+| ![AWS CloudFront](https://img.shields.io/badge/AWS_CloudFront-CDN-D05C42?logo=amazoncloudfront&logoColor=white) | 프론트엔드 CDN |
+| ![AWS Route 53](https://img.shields.io/badge/AWS_Route_53-DNS-8C4FFF?logo=amazonroute53&logoColor=white) | 도메인 관리 |
+| ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white) | CI/CD 파이프라인 |
+
+
+---
+
+## 시스템 아키텍처
+
+### 메인 시스템 아키텍처 (Runtime)
+
+기존 그림은 ALB를 포함한 초기 설계도입니다. 현재 배포는 CloudFront/S3 → 브라우저 → API 도메인 → EC2 Nginx/Spring Boot → RDS이며, OIDC·S3·SSM으로 배포합니다. [현재 아키텍처](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/4.ARCHITECTURE.md)를 함께 확인하세요.
+```
+사용자가 서비스를 이용할 때의 흐름
+```
+<img width="2770" height="1642" alt="image" src="https://github.com/user-attachments/assets/4ee8e29d-36bc-40a6-9616-79c92359417c" />
+
+### 네크워크 및 보안체계
+#### 보안 그룹 관계도
+
+아래 그림은 초기 ALB 설계 관계도입니다. 현재 배포 가이드의 규칙은 아래 표와 같습니다.
+<img width="2475" height="696" alt="image" src="https://github.com/user-attachments/assets/674ec8ba-3727-446f-92b2-813d553fe83d" />
+
+#### 보안 그룹 규칙 상세
+
+| 보안 그룹 | 인바운드 규칙 | 소스 | 목적 |
+|---------|------------|------|------|
+| **mediflow-ec2-sg** | HTTPS (443), HTTP (80) | 0.0.0.0/0 | Nginx HTTPS 및 리다이렉션 |
+| **mediflow-ec2-sg** | 9005 외부 비공개 | EC2 내부 | Nginx → Spring Boot |
+| **mediflow-rds-sg** | MariaDB (3306) | mediflow-ec2-sg | EC2 → RDS 연결 |
+
+관리 접속·배포는 Systems Manager를 사용하며 SSH·RDS의 외부 공개는 필요하지 않습니다. 실제 AWS 규칙 확인은 [배포 가이드](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/deploy/aws/README.md)를 따릅니다.
+
+---
 
 ## 상세 문서
 
+### 개발 가이드
+- [개발자 가이드](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/README.md) - 로컬 환경 설정
+- [API 문서](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/6.API_DOCUMENTATION.md) - REST API 명세 ([Swagger 1.3.2](https://github.com/MediFlow-EMR/mediflow-dev/blob/main/swagger.yaml))
+- [검증 결과](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/10.QUALITY_AND_VALIDATION.md) - 실제 검증 범위와 남은 한계
+
+### 시스템 설계
 - [프로젝트 개요](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/1.PROJECT_OVERVIEW.md)
-- [데이터베이스 구조](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/5.DATABASE_DESIGN.md)
-- [API 문서](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/6.API_DOCUMENTATION.md)
-- [검증 결과와 알려진 한계](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/10.QUALITY_AND_VALIDATION.md)
-- [향후 계획](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/7.ROADMAP.md)
+- [아키텍처 설계](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/4.ARCHITECTURE.md)
+- [데이터베이스 설계](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/5.DATABASE_DESIGN.md)
+
+### 법적 고려사항
+- [법적 컴플라이언스](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/8.LEGAL_COMPLIANCE.md) - 의료법/개인정보보호법
+
+---
+
+## 향후 계획
+
+- [향후 업데이트 계획](https://github.com/MediFlow-EMR/MediFlow-docs/blob/main/7.ROADMAP.md)
